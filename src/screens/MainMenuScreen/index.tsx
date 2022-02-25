@@ -22,13 +22,13 @@ const MainMenuScreen: React.FC = () => {
         <div className="pt-5">
             <h2 className='font-semibold text-4xl text-center tracking-wide text-indigo-500'>Nim.io</h2>
             <div className="mt-9 px-10">
-                <div className="grid grid-row-3 space-y-3">
+                <div className="grid grid-rows-2 space-y-3 sm:grid-rows-1 sm:grid-cols-2 sm:space-x-2 sm:space-y-0 md:space-x-3">
                     <MenuCard
                         title="Create Game"
                         subtitle="Choose heap sizes:"
                         icon="pencil"
                     >
-                        <div className="flex space-x-3 mb-10">
+                        <div className="flex space-x-3 mb-10 xl:space-x-5">
                             <HeapInput name="heapA" value={heapA} setValue={setHeapA}/>
                             <HeapInput name="heapB" value={heapB} setValue={setHeapB}/>
                             <HeapInput name="heapC" value={heapC} setValue={setHeapC}/>
@@ -44,8 +44,11 @@ const MainMenuScreen: React.FC = () => {
                         <LinkButton label="Join" pathname={`/game/${gameId}/2`}/>
                     </MenuCard>
                 </div>
-                <div>How to play?</div>
             </div>
+            <div className=" bg-gray-100 py-5 text-center">How to play?
+            adahskdjash kdjsah dkasjhd askjdh as \
+            dasdkasjladh            
+             jashdkajshd a</div>
         </div>
     )
 }
