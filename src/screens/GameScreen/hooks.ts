@@ -1,38 +1,61 @@
-import {Socket} from 'socket.io-client';
-import {useEffect, useState} from 'react';
-import {Game} from './types';
-import {EMPTY_GAME} from '../../constants';
+import { Socket } from 'socket.io-client';
+import { useEffect, useState } from 'react';
+import { Game } from './types';
+import { EMPTY_GAME } from '../../constants';
+import { errorCallback } from '.';
 
-//@TODO: add meaningful error callback
-const errorCallback = (e: any) => e && console.error(e);
-
-export function useEstablishGame(socket: Socket, gameId: string, playerId: string, heaps?: number[]) {
+export function useEstablishGame(socket: Socket, gameId: string, playerId: number, heaps?: number[]) {
    const [playerNo, setPlayerNo] = useState(playerId);
    const [game, setGame] = useState<Game>(EMPTY_GAME);
 
    useEffect(() => {
-     if (playerId === '1') {
-        socket.emit('newGame', {roomId: gameId, heaps}, errorCallback);
-     } else if (playerId === '2') {
-        socket.emit('joinGame', {roomId: gameId}, errorCallback);
-     }
-    }, [gameId, playerId]);
-    
-   useEffect(() => {
-      socket.on('init',({newGame})=>{
-         setGame(game => {
-             return {...game,...newGame}
-         });
-     })
+      if (playerNo === 1) {
+         socket.emit('newGame', { roomId: gameId, heaps }, errorCallback);
+      } else if (playerNo === 2) {
+         socket.emit('joinGame', { roomId: gameId }, errorCallback);
+      }
+   }, [gameId, playerNo]);
 
-     socket.on('roleUpdate',({userRole})=>{
+   useEffect(() => {
+      socket.on('init', ({ newGame }) => {
+         setGame(game => {
+            return { ...game, ...newGame }
+         });
+      })
+
+      socket.on('roleUpdate', ({ userRole }) => {
          setPlayerNo(userRole);
-     })
-      
+      })
+
       return () => {
          socket.disconnect()
       };
-   }, [])
+   }, [setGame])
 
-   return {playerNo, game, setGame};
+   useEffect(() => {
+      socket.on('gameUpdate', ({ update, isRestart }) => {
+         // if(update.player2 === null){
+         //     setInfoDisplay('Your friend can join this game with the Game ID listed above !');
+         // }
+         // if (isRestart) {
+         //     setShowGame(true);
+         // }
+         console.log('update: ', update);
+         setGame(game => {
+            return { ...game, ...update }
+         });
+      })
+   }, [setGame])
+
+   useEffect(() => {
+      socket.on('gameOver', ({ winner }) => {
+         setGame(game => {
+            return { ...game, heaps: [0, 0, 0] }
+         })
+         // setInfoDisplay(`Your winner is ${winner}`);
+         // setShowGame(false);
+      })
+   }, [setGame]);
+
+   return { playerNo, game, setGame };
 };
