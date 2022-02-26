@@ -33,7 +33,7 @@ const MainMenuScreen: React.FC = () => {
                             <HeapInput name="heapB" value={heapB} setValue={setHeapB}/>
                             <HeapInput name="heapC" value={heapC} setValue={setHeapC}/>
                         </div>
-                        <LinkButton label="Create" pathname={`/game/${generateUniqueId()}/1`}/>
+                        <LinkButton label="Create" pathname={`/game/${generateUniqueId()}/1`} state={{heaps: [heapA, heapB, heapC]}}/>
                     </MenuCard>
                     <MenuCard
                         title="Join Game"
@@ -41,7 +41,7 @@ const MainMenuScreen: React.FC = () => {
                         icon="globe"
                     >
                         <GameIdInput value={gameId} onChange={onGameIdChangeHandler}/>
-                        <LinkButton label="Join" pathname={`/game/${gameId}/2`}/>
+                        <LinkButton label="Join" pathname={gameId ? `/game/${gameId}/2` : '/'}/>
                     </MenuCard>
                 </div>
             </div>

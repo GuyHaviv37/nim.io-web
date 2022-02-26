@@ -16,7 +16,7 @@ const App = () => {
                 <BrowserRouter>
                     <Routes>
                         <Route path="/" element={<MainMenuScreen />} />
-                        <Route path="/game/:roomId/:player" element={<GameScreen />} />
+                        <Route path="/game/:gameId/:playerId" element={<GameScreen />} />
                     </Routes>
                 </BrowserRouter>
             </SocketContext.Provider>
