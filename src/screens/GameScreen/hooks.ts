@@ -7,6 +7,7 @@ import { errorCallback } from '.';
 export function useEstablishGame(socket: Socket, gameId: string, playerId: number, heaps?: number[]) {
    const [playerNo, setPlayerNo] = useState(playerId);
    const [game, setGame] = useState<Game>(EMPTY_GAME);
+   const [winnerId, setWinnerId] = useState<string | undefined>();
 
    useEffect(() => {
       if (playerNo === 1) {
@@ -52,10 +53,10 @@ export function useEstablishGame(socket: Socket, gameId: string, playerId: numbe
          setGame(game => {
             return { ...game, heaps: [0, 0, 0] }
          })
-         // setInfoDisplay(`Your winner is ${winner}`);
+         setWinnerId(winner);
          // setShowGame(false);
       })
    }, [setGame]);
 
-   return { playerNo, game, setGame };
+   return { playerNo, game, winnerId };
 };

@@ -19,16 +19,23 @@ const GameScreen: React.FC<GameScreenProps> = (props) => {
     const { state } = useLocation() as GameScreenLocation;
     const { gameId = '1', playerId = '0' } = useParams();
     const navigate = useNavigate();
-    const { playerNo, game, setGame } = useEstablishGame(socket, gameId, parseInt(playerId), state?.heaps);
+    const { playerNo, game, winnerId } = useEstablishGame(socket, gameId, parseInt(playerId), state?.heaps);
     const isGameReady = game.isPlayer1Ready && game.isPlayer2Ready;
+    const socketId = playerNo === 1 ? game.player1 : game.player2;
 
     const toggleReady = useCallback(() => {
         let isReady = false;
         if (playerNo === 1) isReady = !game.isPlayer1Ready;
         if (playerNo === 2) isReady = !game.isPlayer2Ready;
-        console.log('at toggleReady - sending: ', isReady);
         socket.emit('toggleReady', {isReady}, errorCallback);
     }, [playerNo, game.isPlayer1Ready, game.isPlayer2Ready]);
+
+    const submitMove = useCallback((heapIndex, amount) => {
+        socket.emit('gameMove', {
+            heapIndex,
+            amount,
+        }, errorCallback);
+    }, [])
     
     return (
         <div className="pt-5">
@@ -40,7 +47,11 @@ const GameScreen: React.FC<GameScreenProps> = (props) => {
             </h2>
             <div className="mt-9 px-10">
                 {isGameReady ?
-                    <ActiveGameScreen /> :
+                    <ActiveGameScreen
+                        heaps={game.heaps}
+                        submitMove={submitMove}
+                        isWinner={winnerId === socketId}
+                    /> :
                     <PreGameScreen
                         toggleReady={toggleReady}
                         isPlayerReady={playerNo === 1 ? game.isPlayer1Ready : game.isPlayer2Ready}

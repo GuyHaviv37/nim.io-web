@@ -19,7 +19,7 @@ const HeapInput: React.FC<HeapInputProps> = (props) => {
 
     useEffect(() => {
         if (value > max) {
-            setValue(max);
+            setValue(Math.max(1, max));
         } 
     }, [maxValue]);
 
