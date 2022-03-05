@@ -12,3 +12,5 @@ export const EMPTY_GAME = {
     isPlayer1Ready: false,
     isPlayer2Ready: false,
 }
+
+export const MAX_HEAP_SIZE = 25;
