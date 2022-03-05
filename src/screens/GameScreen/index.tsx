@@ -1,10 +1,10 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import socketContext from '../../context/socket-context';
 import PreGameScreen from './PreGameScreen';
 import ActiveGameScreen from './ActiveGameScreen';
 import { useEstablishGame } from './hooks';
-import { CLIENT } from '../../constants';
+import { CLIENT, ENDPOINT } from '../../constants';
+import { io } from 'socket.io-client';
 
 type GameScreenLocation = { state: { heaps: number[] } };
 
@@ -15,7 +15,7 @@ interface GameScreenProps {
 export const errorCallback = (e: any) => e && console.error(e);
 
 const GameScreen: React.FC<GameScreenProps> = (props) => {
-    const socket = useContext(socketContext)
+    const socket = useMemo(() => io(ENDPOINT),[]);
     const { state } = useLocation() as GameScreenLocation;
     const { gameId = '1', playerId = '0' } = useParams();
     const navigate = useNavigate();
