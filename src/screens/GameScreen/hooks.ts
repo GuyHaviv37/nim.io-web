@@ -3,8 +3,10 @@ import { useEffect, useState } from 'react';
 import { Game } from './types';
 import { EMPTY_GAME } from '../../constants';
 import { errorCallback } from '.';
+import { useNavigate } from 'react-router-dom';
 
 export function useEstablishGame(socket: Socket, gameId: string, playerId: number, heaps?: number[]) {
+   const navigate = useNavigate();
    const [playerNo, setPlayerNo] = useState(playerId);
    const [game, setGame] = useState<Game>(EMPTY_GAME);
    const [winnerId, setWinnerId] = useState<string | undefined>();
@@ -58,5 +60,5 @@ export function useEstablishGame(socket: Socket, gameId: string, playerId: numbe
       })
    }, [setGame]);
 
-   return { playerNo, game, winnerId };
+   return { navigate, playerNo, game, winnerId };
 };

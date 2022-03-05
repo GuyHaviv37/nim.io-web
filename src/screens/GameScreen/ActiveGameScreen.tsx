@@ -7,10 +7,11 @@ import { MAX_HEAP_SIZE } from '../../constants';
 interface ActiveGameScreenProps {
     heaps: number[];
     submitMove: (heapIndex: number, amount: number) => void;
+    isTurn: boolean;
 }
 
 const ActiveGameScreen: React.FC<ActiveGameScreenProps> = (props) => {
-    const {heaps, submitMove} = props;
+    const {heaps, submitMove, isTurn} = props;
     const [selectedHeap, setSelectedHeap] = useState<number | undefined>();
     const [amountToRemove, setAmountToRemove] = useState(1);
 
@@ -35,7 +36,7 @@ const ActiveGameScreen: React.FC<ActiveGameScreenProps> = (props) => {
             {/* Amount selector | submit button - enabled/disabled by turn */}
                 <HeapInput name="amountToRemove" value={amountToRemove} setValue={setAmountToRemove}
                 maxValue={selectedHeap !== undefined ? heaps[selectedHeap] : MAX_HEAP_SIZE}/>
-                <Button label='Submit' onPress={submitMoveHandler}/>
+                <Button label='Submit' onPress={submitMoveHandler} disabled={!isTurn}/>
             </div>
         </div>
     )

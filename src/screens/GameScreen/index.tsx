@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import PreGameScreen from './PreGameScreen';
 import ActiveGameScreen from './ActiveGameScreen';
 import { useEstablishGame } from './hooks';
@@ -19,8 +19,7 @@ const GameScreen: React.FC<GameScreenProps> = (props) => {
     const socket = useMemo(() => io(ENDPOINT), []);
     const { state } = useLocation() as GameScreenLocation;
     const { gameId = '1', playerId = '0' } = useParams();
-    const navigate = useNavigate();
-    const { playerNo, game, winnerId } = useEstablishGame(socket, gameId, parseInt(playerId), state?.heaps);
+    const { navigate, playerNo, game, winnerId } = useEstablishGame(socket, gameId, parseInt(playerId), state?.heaps);
     const isGameReady = game.isPlayer1Ready && game.isPlayer2Ready;
     const socketId = playerNo === 1 ? game.player1 : game.player2;
 
@@ -56,6 +55,7 @@ const GameScreen: React.FC<GameScreenProps> = (props) => {
                         <ActiveGameScreen
                             heaps={game.heaps}
                             submitMove={submitMove}
+                            isTurn={game.currentPlayerTurn === socketId}
                         /> :
                         <PreGameScreen
                             toggleReady={toggleReady}
