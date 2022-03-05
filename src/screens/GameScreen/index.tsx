@@ -5,6 +5,7 @@ import ActiveGameScreen from './ActiveGameScreen';
 import { useEstablishGame } from './hooks';
 import { CLIENT, ENDPOINT } from '../../constants';
 import { io } from 'socket.io-client';
+import GameOverBanner from '../../components/GameOverBanner';
 
 type GameScreenLocation = { state: { heaps: number[] } };
 
@@ -15,7 +16,7 @@ interface GameScreenProps {
 export const errorCallback = (e: any) => e && console.error(e);
 
 const GameScreen: React.FC<GameScreenProps> = (props) => {
-    const socket = useMemo(() => io(ENDPOINT),[]);
+    const socket = useMemo(() => io(ENDPOINT), []);
     const { state } = useLocation() as GameScreenLocation;
     const { gameId = '1', playerId = '0' } = useParams();
     const navigate = useNavigate();
@@ -27,7 +28,7 @@ const GameScreen: React.FC<GameScreenProps> = (props) => {
         let isReady = false;
         if (playerNo === 1) isReady = !game.isPlayer1Ready;
         if (playerNo === 2) isReady = !game.isPlayer2Ready;
-        socket.emit('toggleReady', {isReady}, errorCallback);
+        socket.emit('toggleReady', { isReady }, errorCallback);
     }, [playerNo, game.isPlayer1Ready, game.isPlayer2Ready]);
 
     const submitMove = useCallback((heapIndex, amount) => {
@@ -36,30 +37,39 @@ const GameScreen: React.FC<GameScreenProps> = (props) => {
             amount,
         }, errorCallback);
     }, [])
-    
+
+    const restartGame = useCallback(() => {
+        socket.emit('restartGame',{roomId: gameId}, errorCallback);
+    }, [gameId]);
+
     return (
         <div className="pt-5">
-            <h2 
+            <h2
                 className='font-semibold text-4xl text-center tracking-wide text-indigo-500 cursor-pointer'
                 onClick={() => navigate('/')}
             >
                 Nim.io
             </h2>
-            <div className="mt-9 px-10">
-                {isGameReady ?
-                    <ActiveGameScreen
-                        heaps={game.heaps}
-                        submitMove={submitMove}
-                        isWinner={winnerId === socketId}
-                    /> :
-                    <PreGameScreen
-                        toggleReady={toggleReady}
-                        isPlayerReady={playerNo === 1 ? game.isPlayer1Ready : game.isPlayer2Ready}
-                        isOpponentConnected={playerNo === 1 ? game.player2 : game.player1}
-                        isOpponentReady={playerNo === 1 ? game.isPlayer2Ready : game.isPlayer1Ready}
-                        inviteUrl={`${CLIENT}/game/${gameId}/2`}
-                    />}
-            </div>
+            {winnerId === undefined ?
+                <div className="mt-9 px-10">
+                    {isGameReady ?
+                        <ActiveGameScreen
+                            heaps={game.heaps}
+                            submitMove={submitMove}
+                        /> :
+                        <PreGameScreen
+                            toggleReady={toggleReady}
+                            isPlayerReady={playerNo === 1 ? game.isPlayer1Ready : game.isPlayer2Ready}
+                            isOpponentConnected={playerNo === 1 ? game.player2 : game.player1}
+                            isOpponentReady={playerNo === 1 ? game.isPlayer2Ready : game.isPlayer1Ready}
+                            inviteUrl={`${CLIENT}/game/${gameId}/2`}
+                        />}
+                </div>
+            :   <GameOverBanner
+                    isWinner={winnerId === socketId}
+                    restartGame={restartGame}
+                />
+            }
             {/* Footer: */}
             {/* Error Toast */}
         </div>

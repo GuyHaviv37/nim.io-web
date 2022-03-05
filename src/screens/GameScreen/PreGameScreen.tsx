@@ -21,7 +21,7 @@ const PreGameScreen: React.FC<PreGameScreenProps> = (props) => {
     const onInviteFriendPress = useCallback(() => {
         if (!showCopyToClipboard) {
             setShowCopyToClipboard(true);
-            setTimeout(() => setShowCopyToClipboard(false), 4100);
+            setTimeout(() => setShowCopyToClipboard(false), 2100);
         }
         navigator.clipboard.writeText(inviteUrl);
     }, [showCopyToClipboard, setShowCopyToClipboard]);

@@ -7,11 +7,10 @@ import { MAX_HEAP_SIZE } from '../../constants';
 interface ActiveGameScreenProps {
     heaps: number[];
     submitMove: (heapIndex: number, amount: number) => void;
-    isWinner?: boolean;
 }
 
 const ActiveGameScreen: React.FC<ActiveGameScreenProps> = (props) => {
-    const {heaps, submitMove, isWinner} = props;
+    const {heaps, submitMove} = props;
     const [selectedHeap, setSelectedHeap] = useState<number | undefined>();
     const [amountToRemove, setAmountToRemove] = useState(1);
 
@@ -25,7 +24,6 @@ const ActiveGameScreen: React.FC<ActiveGameScreenProps> = (props) => {
 
     return (
         <div>
-            {isWinner && 'You Won !'}
             <div className="bg-indigo-200 rounded flex flex-col mx-auto items-center space-y-3 pt-3 pb-5 max-w-3xl">
             {/* Active Game: [gameUpdate, gameOver - listeners], [sendMove, onGameRestart - emitters]*/}
             {/* Heaps */}

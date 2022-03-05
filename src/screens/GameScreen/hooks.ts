@@ -38,9 +38,9 @@ export function useEstablishGame(socket: Socket, gameId: string, playerId: numbe
          // if(update.player2 === null){
          //     setInfoDisplay('Your friend can join this game with the Game ID listed above !');
          // }
-         // if (isRestart) {
-         //     setShowGame(true);
-         // }
+         if (isRestart) {
+             setWinnerId(undefined);
+         }
          console.log('update: ', update);
          setGame(game => {
             return { ...game, ...update }
