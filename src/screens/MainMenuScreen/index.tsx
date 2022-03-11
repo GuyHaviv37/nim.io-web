@@ -4,6 +4,7 @@ import HeapInput from '../../components/HeapInput';
 import LinkButton from '../../components/LinkButton';
 import GameIdInput from '../../components/GameIdInput';
 import {v4 as uuidv4} from 'uuid';
+import HowToPlay from '../../components/HowToPlay';
 
 const generateUniqueId = () => {
     return uuidv4().substring(0,8);
@@ -19,7 +20,7 @@ const MainMenuScreen: React.FC = () => {
     }, [setGameId]);
 
     return (
-        <div className="pt-5">
+        <main className="pt-5">
             <h2 className='font-semibold text-4xl text-center tracking-wide text-indigo-500'>Nim.io</h2>
             <div className="mt-9 px-10">
                 <div className="grid grid-rows-2 space-y-3 sm:grid-rows-1 sm:grid-cols-2 sm:space-x-2 sm:space-y-0 md:space-x-3">
@@ -45,11 +46,8 @@ const MainMenuScreen: React.FC = () => {
                     </MenuCard>
                 </div>
             </div>
-            <div className=" bg-gray-100 py-5 text-center">How to play?
-            adahskdjash kdjsah dkasjhd askjdh as \
-            dasdkasjladh            
-             jashdkajshd a</div>
-        </div>
+            <HowToPlay/>
+        </main>
     )
 }
 
