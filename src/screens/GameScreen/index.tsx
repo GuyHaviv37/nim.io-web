@@ -1,25 +1,24 @@
 import React, { useCallback, useMemo } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import PreGameScreen from './PreGameScreen';
 import ActiveGameScreen from './ActiveGameScreen';
-import { useEstablishGame } from './hooks';
+import { useEstablishGame } from './useEstablishGame';
 import { CLIENT, ENDPOINT } from '../../constants';
 import { io } from 'socket.io-client';
 import GameOverBanner from '../../components/GameOverBanner';
+import { NimSocketError } from '../../useErrors';
 
 type GameScreenLocation = { state: { heaps: number[] } };
-
 interface GameScreenProps {
+    errorCallback: (e: NimSocketError) => void;
 }
 
-//@TODO: add meaningful error callback
-export const errorCallback = (e: any) => e && console.error(e);
-
-const GameScreen: React.FC<GameScreenProps> = (props) => {
+const GameScreen: React.FC<GameScreenProps> = ({errorCallback}) => {
     const socket = useMemo(() => io(ENDPOINT), []);
     const { state } = useLocation() as GameScreenLocation;
     const { gameId = '1', playerId = '0' } = useParams();
-    const { navigate, playerNo, game, winnerId } = useEstablishGame(socket, gameId, parseInt(playerId), state?.heaps);
+    const { playerNo, game, winnerId } = useEstablishGame(socket, gameId, parseInt(playerId), errorCallback, state?.heaps);
+    const navigate = useNavigate();
     const isGameReady = game.isPlayer1Ready && game.isPlayer2Ready;
     const socketId = playerNo === 1 ? game.player1 : game.player2;
 
@@ -70,10 +69,8 @@ const GameScreen: React.FC<GameScreenProps> = (props) => {
                     restartGame={restartGame}
                 />
             }
-            {/* Footer: */}
-            {/* Error Toast */}
         </div>
     )
 }
 
-export default GameScreen;
+export default React.memo(GameScreen);

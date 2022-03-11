@@ -51,4 +51,4 @@ const MainMenuScreen: React.FC = () => {
     )
 }
 
-export default MainMenuScreen;
+export default React.memo(MainMenuScreen);
