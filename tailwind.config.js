@@ -13,6 +13,7 @@ module.exports = {
       },
       animation: {
         fade: 'fade 2s',
+        fadeLonger: 'fade 5s',
       }
     },
   },

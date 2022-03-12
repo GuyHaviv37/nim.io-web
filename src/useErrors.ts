@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export type NimSocketError = {
     type: string;
     msg: string;
+}
+
+export type NimError = NimSocketError & {
+    timeoutId: number;
 }
 
 enum NimErrors {
@@ -16,24 +20,51 @@ enum NimErrors {
     USER_WITHOUT_ROOM = 'USER_WITHOUT_ROOM',
 }
 
+const ERROR_DISPLAY_TIME = 5000;
+
 export const useErrors = () => {
-    const [errorsQueue, setErrorsQueue] = useState<NimSocketError[]>([])
+    const [errorsQueue, setErrorsQueue] = useState<NimError[]>([])
     const navigate = useNavigate();
-    const errorCallback = (e: NimSocketError) => {
-        if (!e) return;
-        const errorType = e.type;
+
+    const addToQueue = useCallback((error: NimSocketError) => {
+        // I think I can avoid adding duplicate errors by type ?
+        const timeoutId = setTimeout(() => {
+            setErrorsQueue(queue => queue.slice(1));
+        }, ERROR_DISPLAY_TIME)
+        const wrappedError = {
+            ...error,
+            timeoutId,
+        }
+        setErrorsQueue(queue => [...queue, wrappedError]);
+    }, [setErrorsQueue]);
+
+    const removeFromQueue = useCallback((queue: NimError[], error: NimError) => {
+        const newQueue = queue.filter(nimError => nimError.timeoutId !== error.timeoutId);
+        setErrorsQueue(newQueue);
+    }, [setErrorsQueue])
+
+    const errorCallback = (error: NimSocketError) => {
+        if (!error) return;
+        const errorType = error.type;
         switch (errorType) {
             case NimErrors.INAVLID_HEAPS_SIZES:
-                console.error('useErrors: ', e.msg);
+            case NimErrors.FULL_ROOM:
+            case NimErrors.ROOM_NOT_FOUND:
+                console.error('useErrors: ', error.msg);
+                addToQueue(error);
                 navigate('/');
                 break;
             case NimErrors.NO_USER_FOUND:
-                console.error('useErrors: ', e.msg);
-                break;
+            case NimErrors.USER_NOT_IN_ROOM:
+            case NimErrors.NOT_ENOUGH_PLAYERS:
+            case NimErrors.NO_USER_FOUND:
+            case NimErrors.USER_WITHOUT_ROOM:
+                addToQueue(error);
+                console.error('useErrors: ', error.msg);
+            default:
+                console.error('Unknown Error: ', error);
         }
     };
     
-    // "Reducer per error types"
-
-    return {errorCallback, errorsQueue};
+    return {errorCallback, errorsQueue, removeFromQueue};
 };
