@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import PreGameScreen from './PreGameScreen';
 import ActiveGameScreen from './ActiveGameScreen';
 import { useEstablishGame } from './useEstablishGame';
-import { CLIENT, ENDPOINT } from '../../constants';
+import { ENDPOINT } from '../../constants';
 import { io } from 'socket.io-client';
 import GameOverBanner from '../../components/GameOverBanner';
 import { NimSocketError } from '../../useErrors';
@@ -61,7 +61,7 @@ const GameScreen: React.FC<GameScreenProps> = ({errorCallback}) => {
                             isPlayerReady={playerNo === 1 ? game.isPlayer1Ready : game.isPlayer2Ready}
                             isOpponentConnected={playerNo === 1 ? game.player2 : game.player1}
                             isOpponentReady={playerNo === 1 ? game.isPlayer2Ready : game.isPlayer1Ready}
-                            inviteUrl={`${CLIENT}/game/${gameId}/2`}
+                            gameId={gameId}
                         />}
                 </div>
             :   <GameOverBanner

@@ -1,13 +1,14 @@
 import React, { useCallback, useState } from 'react';
 import {CheckCircleIcon, XCircleIcon} from '@heroicons/react/outline';
 import Button from '../../components/Button';
+import { CLIENT } from '../../constants';
 
 interface PreGameScreenProps {
     isPlayerReady: boolean;
     isOpponentReady: boolean;
     isOpponentConnected: string | null;
     toggleReady: () => void;
-    inviteUrl: string;
+    gameId: string;
 }
 
 const getSwitchStyles = (isReady: boolean) => {
@@ -15,7 +16,7 @@ const getSwitchStyles = (isReady: boolean) => {
 }
 
 const PreGameScreen: React.FC<PreGameScreenProps> = (props) => {
-    const {isPlayerReady, isOpponentReady, isOpponentConnected, toggleReady, inviteUrl} = props;
+    const {isPlayerReady, isOpponentReady, isOpponentConnected, toggleReady, gameId} = props;
     const [showCopyToClipboard, setShowCopyToClipboard] = useState(false);
 
     const onInviteFriendPress = useCallback(() => {
@@ -23,13 +24,14 @@ const PreGameScreen: React.FC<PreGameScreenProps> = (props) => {
             setShowCopyToClipboard(true);
             setTimeout(() => setShowCopyToClipboard(false), 2100);
         }
-        navigator.clipboard.writeText(inviteUrl);
+        navigator.clipboard.writeText(`Hey! join me for a game of Nim.io at ${CLIENT} , use Game ID: ${gameId}`);
     }, [showCopyToClipboard, setShowCopyToClipboard]);
     
     return (
         <div>
             <div className="bg-indigo-200 rounded flex flex-col mx-auto items-center space-y-3 pt-3 pb-5 max-w-3xl">
                 <h4 className='text-slate-800 text-lg tracking-wider font-semibold lg:text-xl xl:text-3xl'>Players are getting ready...</h4>
+                <p className="xl:text-lg text-center">Game ID: {gameId}</p>
                 <div className="grid grid-cols-2 grid-rows-2 place-items-center">
                     <p className="xl:text-lg">Opponent: </p>
                     {!!isOpponentConnected ? 
@@ -57,7 +59,7 @@ const PreGameScreen: React.FC<PreGameScreenProps> = (props) => {
                     lg:text-md
                     border-2 rounded-full border-slate-400 
                     ${showCopyToClipboard ? 'animate-fade': ''}`}>
-                        Link to join was copied to your clipboard
+                        Invite to join was copied to your clipboard
                     </p>
                 </div>
             }
