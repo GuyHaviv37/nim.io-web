@@ -18,6 +18,9 @@ enum NimErrors {
     NOT_ENOUGH_PLAYERS = 'NOT_ENOUGH_PLAYERS',
     NO_USER_FOUND = 'NO_USER_FOUND',
     USER_WITHOUT_ROOM = 'USER_WITHOUT_ROOM',
+    NOT_PLAYER_TURN = 'NOT_PLAYER_TURN',
+    INVALID_HEAP_INDEX = 'INVALID_HEAP_INDEX',
+    INVALID_AMOUNT_TO_REMOVE = 'INVALID_AMOUNT_TO_REMOVE',
 }
 
 const ERROR_DISPLAY_TIME = 5000;
@@ -57,8 +60,10 @@ export const useErrors = () => {
             case NimErrors.NO_USER_FOUND:
             case NimErrors.USER_NOT_IN_ROOM:
             case NimErrors.NOT_ENOUGH_PLAYERS:
-            case NimErrors.NO_USER_FOUND:
             case NimErrors.USER_WITHOUT_ROOM:
+            case NimErrors.NOT_PLAYER_TURN:
+            case NimErrors.INVALID_HEAP_INDEX:
+            case NimErrors.INVALID_AMOUNT_TO_REMOVE:
                 addToQueue(error);
                 console.error('useErrors: ', error.msg);
             default:

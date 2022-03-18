@@ -6,7 +6,7 @@ import { MAX_HEAP_SIZE } from '../../constants';
 
 interface ActiveGameScreenProps {
     heaps: number[];
-    submitMove: (heapIndex: number, amount: number) => void;
+    submitMove: (heapIndex: number | undefined, amount: number) => void;
     isTurn: boolean;
 }
 
@@ -16,11 +16,7 @@ const ActiveGameScreen: React.FC<ActiveGameScreenProps> = (props) => {
     const [amountToRemove, setAmountToRemove] = useState(1);
 
     const submitMoveHandler = useCallback(() => {
-        if (selectedHeap !== undefined) {
-            submitMove(selectedHeap, amountToRemove);
-        } else {
-            console.log('no heap is selected');
-        }
+        submitMove(selectedHeap, amountToRemove);
     }, [selectedHeap, amountToRemove, submitMove]);
 
     return (

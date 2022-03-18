@@ -1,4 +1,4 @@
-export const ENDPOINT = 'http://localhost:8080';
+export const ENDPOINT = 'https://nim-io-server.herokuapp.com/';
 export const CLIENT = 'http://localhost:3000';
 
 export const EMPTY_GAME = {
