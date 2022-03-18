@@ -1,5 +1,5 @@
 export const ENDPOINT = 'https://nim-io-server.herokuapp.com/';
-export const CLIENT = 'http://localhost:3000';
+export const CLIENT = 'https://guyhaviv37.github.io/nim.io-web/';
 
 export const EMPTY_GAME = {
     id: '',

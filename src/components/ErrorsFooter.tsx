@@ -9,7 +9,6 @@ interface ErrorsFooterProps {
 
 const ErrorsFooter: React.FC<ErrorsFooterProps> = (props) => {
     const {errorsQueue, removeFromQueue} = props;
-    console.log(errorsQueue)
 
     return (
         <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2
