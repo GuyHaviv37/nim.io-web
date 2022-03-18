@@ -6,7 +6,7 @@ import App from './App'
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter basename="/nim.io-web">
+    <BrowserRouter>
       <App/>
     </BrowserRouter>
   </React.StrictMode>,
