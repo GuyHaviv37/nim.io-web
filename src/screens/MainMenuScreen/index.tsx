@@ -10,6 +10,10 @@ const generateUniqueId = () => {
     return uuidv4().substring(0,8);
 }
 
+const getRandomizedHeaps = () => {
+    return new Array(3).fill(1).map(() => Math.floor(Math.random() * 100) % 25 + 1);
+}
+
 const MainMenuScreen: React.FC = () => {
     const [heapA, setHeapA] = useState(1);
     const [heapB, setHeapB] = useState(1);
@@ -34,7 +38,11 @@ const MainMenuScreen: React.FC = () => {
                             <HeapInput name="heapB" value={heapB} setValue={setHeapB}/>
                             <HeapInput name="heapC" value={heapC} setValue={setHeapC}/>
                         </div>
-                        <LinkButton label="Create" pathname={`/game/${generateUniqueId()}/1`} state={{heaps: [heapA, heapB, heapC]}}/>
+                        <div className="flex items-center flex-col space-y-1">
+                            <LinkButton label="Create" pathname={`/game/${generateUniqueId()}/1`} state={{heaps: [heapA, heapB, heapC]}}/>
+                            <p>or</p>
+                            <LinkButton label="Randomize" pathname={`/game/${generateUniqueId()}/1`} state={{heaps: getRandomizedHeaps()}}/>
+                        </div>
                     </MenuCard>
                     <MenuCard
                         title="Join Game"
