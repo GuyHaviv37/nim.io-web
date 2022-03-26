@@ -36,8 +36,8 @@ const GameScreen: React.FC<GameScreenProps> = ({errorCallback}) => {
         }, errorCallback);
     }, [])
 
-    const restartGame = useCallback(() => {
-        socket.emit('restartGame',{roomId: gameId}, errorCallback);
+    const restartGame = useCallback((newHeaps?: number[]) => {
+        socket.emit('restartGame',{roomId: gameId, newHeaps}, errorCallback);
     }, [gameId]);
 
     return (

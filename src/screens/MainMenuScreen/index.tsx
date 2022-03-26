@@ -5,13 +5,10 @@ import LinkButton from '../../components/LinkButton';
 import GameIdInput from '../../components/GameIdInput';
 import {v4 as uuidv4} from 'uuid';
 import HowToPlay from '../../components/HowToPlay';
+import {getRandomizedHeaps} from '../../constants';
 
 const generateUniqueId = () => {
     return uuidv4().substring(0,8);
-}
-
-const getRandomizedHeaps = () => {
-    return new Array(3).fill(1).map(() => Math.floor(Math.random() * 100) % 25 + 1);
 }
 
 const MainMenuScreen: React.FC = () => {
