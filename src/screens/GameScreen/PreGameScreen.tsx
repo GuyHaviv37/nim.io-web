@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import {CheckCircleIcon, XCircleIcon} from '@heroicons/react/outline';
 import Button from '../../components/Button';
 import { CLIENT } from '../../constants';
@@ -15,17 +15,30 @@ const getSwitchStyles = (isReady: boolean) => {
     return isReady ? 'bg-indigo-400 flex flex-row-reverse' : 'bg-gray-200';
 }
 
+const getShareableContent = (gameId: string) => ({
+    title: 'Nim.io',
+    text: 'Join me for a game of Nim.io !',
+    url: `${CLIENT}/game/${gameId}/2`
+})
+
 const PreGameScreen: React.FC<PreGameScreenProps> = (props) => {
     const {isPlayerReady, isOpponentReady, isOpponentConnected, toggleReady, gameId} = props;
     const [showCopyToClipboard, setShowCopyToClipboard] = useState(false);
+    const shareableInviteData = useMemo(() => getShareableContent(gameId), [gameId]);
 
     const onInviteFriendPress = useCallback(() => {
-        if (!showCopyToClipboard) {
-            setShowCopyToClipboard(true);
-            setTimeout(() => setShowCopyToClipboard(false), 2100);
+        
+        if (navigator.canShare && navigator.canShare(shareableInviteData)) {
+            navigator.share(shareableInviteData);
+        } else {
+            if (!showCopyToClipboard) {
+                setShowCopyToClipboard(true);
+                setTimeout(() => setShowCopyToClipboard(false), 2100);
+            }
+            navigator.clipboard.writeText(`Hey! join me for a game of Nim.io at ${shareableInviteData.url}`);
         }
-        navigator.clipboard.writeText(`Hey! join me for a game of Nim.io at ${CLIENT} , use Game ID: ${gameId}`);
-    }, [showCopyToClipboard, setShowCopyToClipboard]);
+
+    }, [showCopyToClipboard, setShowCopyToClipboard, shareableInviteData]);
     
     return (
         <div>
