@@ -22,7 +22,7 @@ You can check the backend repo [here](https://github.com/GuyHaviv37/nim.io-serve
 ### What's next?
 To further improve this project I'd probably go for:
 - Actually learning some UX/UI practices (I went with my guts here)
-- Add a feature to randomize heap sizes at creation and restart game
+- Add a feature to randomize heap sizes at creation and restart game (V)
 - Adding a chat to game rooms
 - Adding public rooms (lobby of players seeking opponents)
 - Better accessability and SEO
