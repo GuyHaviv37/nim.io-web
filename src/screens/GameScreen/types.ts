@@ -9,3 +9,5 @@ export type Game = {
     isPlayer1Ready: boolean;
     isPlayer2Ready: boolean;
 }
+
+export type GameLogEntry = {playerTurn: string, heapIndex: number, amount: number};

@@ -17,7 +17,7 @@ const GameScreen: React.FC<GameScreenProps> = ({errorCallback}) => {
     const socket = useMemo(() => io(ENDPOINT), []);
     const { state } = useLocation() as GameScreenLocation;
     const { gameId = '1', playerId = '0' } = useParams();
-    const { playerNo, game, winnerId } = useEstablishGame(socket, gameId, parseInt(playerId), errorCallback, state?.heaps);
+    const { playerNo, game, winnerId, gameLog } = useEstablishGame(socket, gameId, parseInt(playerId), errorCallback, state?.heaps);
     const navigate = useNavigate();
     const isGameReady = game.isPlayer1Ready && game.isPlayer2Ready;
     const socketId = playerNo === 1 ? game.player1 : game.player2;
@@ -54,7 +54,9 @@ const GameScreen: React.FC<GameScreenProps> = ({errorCallback}) => {
                         <ActiveGameScreen
                             heaps={game.heaps}
                             submitMove={submitMove}
-                            isTurn={game.currentPlayerTurn === socketId}
+                            currentPlayerTurn={game.currentPlayerTurn}
+                            socketId={socketId}
+                            gameLog={gameLog}
                         /> :
                         <PreGameScreen
                             toggleReady={toggleReady}

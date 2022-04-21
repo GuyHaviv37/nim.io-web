@@ -1,13 +1,16 @@
 import { Socket } from 'socket.io-client';
 import { useEffect, useState } from 'react';
-import { Game } from './types';
+import { Game, GameLogEntry } from './types';
 import { EMPTY_GAME } from '../../constants';
 import { NimSocketError } from '../../useErrors';
 
-export function useEstablishGame(socket: Socket, gameId: string, playerId: number, errorCallback: (e: NimSocketError) => void, heaps?: number[]) {
+export function useEstablishGame(
+      socket: Socket, gameId: string, playerId: number,
+      errorCallback: (e: NimSocketError) => void, heaps?: number[]) {
    const [playerNo, setPlayerNo] = useState(playerId);
    const [game, setGame] = useState<Game>(EMPTY_GAME);
    const [winnerId, setWinnerId] = useState<string | undefined>();
+   const [gameLog, setGameLog] = useState<GameLogEntry[]>([])
 
    useEffect(() => {
       if (playerNo === 1) {
@@ -34,17 +37,17 @@ export function useEstablishGame(socket: Socket, gameId: string, playerId: numbe
    }, [setGame])
 
    useEffect(() => {
-      socket.on('gameUpdate', ({ update, isRestart }) => {
-         // if(update.player2 === null){
-         //     setInfoDisplay('Your friend can join this game with the Game ID listed above !');
-         // }
+      socket.on('gameUpdate', ({ update, isRestart, gameLogEntry }) => {
          if (isRestart) {
              setWinnerId(undefined);
+             setGameLog([]);
          }
-         console.log('update: ', update);
          setGame(game => {
             return { ...game, ...update }
          });
+         if (gameLogEntry) {
+            setGameLog(gameLog => [gameLogEntry, ...gameLog]);
+         }
       })
    }, [setGame])
 
@@ -58,5 +61,5 @@ export function useEstablishGame(socket: Socket, gameId: string, playerId: numbe
       })
    }, [setGame]);
 
-   return { playerNo, game, winnerId };
+   return { playerNo, game, winnerId, gameLog };
 };
